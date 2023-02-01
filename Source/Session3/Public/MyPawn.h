@@ -66,6 +66,8 @@ public:
 
 	TArray<int> WinStatus;
 
+	TArray<int> Rows;
+
 	void TurnController(int SphereIndex);
 
 	void WinCondition();

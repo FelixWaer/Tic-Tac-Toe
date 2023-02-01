@@ -71,6 +71,7 @@ AMyPawn::AMyPawn()
 
 	SphereStatus.Init(false, 9);
 	WinStatus.Init(0, 9);
+	Rows.Init(0, 8);
 
 	TurnCounter = 0;
 
@@ -161,12 +162,17 @@ void AMyPawn::NinePressed()
 void AMyPawn::restart()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Game Restarted"));
-	for (int i = 0; 0 < 9; i++)
+	for (int i = 0; i < 9; i++)
 	{
-		SphereStatus[i] = 0;
+		SphereStatus[i] = false;
 		WinStatus[i] = 0;
 		Spheres[i]->SetMaterial(0, White);
 	}
+	for (int j = 0; j < 8; j++)
+	{
+		Rows[j] = 0;
+	}
+	TurnCounter = 0;
 }
 
 
@@ -196,19 +202,24 @@ void AMyPawn::TurnController(int SphereIndex)
 
 void AMyPawn::WinCondition()
 {
-	//Sondre kom opp med ideen om å plusse dem sammen, men Felix lagde det og lånte det til Simen
-	int rad1 = WinStatus[0] + WinStatus[1] + WinStatus[2];
-	int rad2 = WinStatus[3] + WinStatus[4] + WinStatus[5];
-	int rad3 = WinStatus[6] + WinStatus[7] + WinStatus[8];
-	int rad4 = WinStatus[0] + WinStatus[4] + WinStatus[8];
-	int rad5 = WinStatus[2] + WinStatus[4] + WinStatus[6];
+	Rows[0] = WinStatus[0] + WinStatus[1] + WinStatus[2];
+	Rows[1] = WinStatus[3] + WinStatus[4] + WinStatus[5];
+	Rows[2] = WinStatus[6] + WinStatus[7] + WinStatus[8];
+	Rows[3] = WinStatus[0] + WinStatus[3] + WinStatus[6];
+	Rows[4] = WinStatus[1] + WinStatus[4] + WinStatus[7];
+	Rows[5] = WinStatus[2] + WinStatus[5] + WinStatus[8];
+	Rows[6] = WinStatus[0] + WinStatus[4] + WinStatus[8];
+	Rows[7] = WinStatus[2] + WinStatus[4] + WinStatus[6];
 
-	if (rad1 == 3 || rad2 == 3 || rad3 == 3 || rad4 == 3 || rad5 == 3)
+	for (int i = 0; i < 8; i++)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Blue player has won"));
-	}
-	else if (rad1 == -3 || rad2 == -3 || rad3 == -3 || rad4 == -3 || rad5 == -3)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Red player has won"));
+		if (Rows[i] == 3)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Blue player has won"));
+		}
+		else if(Rows[i] == -3)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Red player has won"));
+		}
 	}
 }
